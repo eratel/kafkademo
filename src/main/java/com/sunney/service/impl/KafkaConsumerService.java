@@ -43,8 +43,6 @@ public class KafkaConsumerService {
                 logger.info("=====userList.size:" + userList.size());
 
             }
-
         }
     }
-
 }
