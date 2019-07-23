@@ -35,13 +35,14 @@ public class Application {
 
         SpringApplication app = new SpringApplication(Application.class);
         app.setWebEnvironment(false);
-        Set<Object> set = new HashSet<Object>();
+        Set<Object> set = new HashSet<>();
         set.add("classpath:applicationContext.xml");
         app.setSources(set);
         applicationContext = app.run(args);
         send();
 
     }
+
     public static void  send(){
         KafkaService kafkaService = Application.applicationContext.getBean("kafkaService", KafkaService.class);
         for (int i = 1; i < 100; i++) {
@@ -49,7 +50,7 @@ public class Application {
             user.setGmtCeate(new Date());
             user.setUserId(i);
             user.setUserName("sunney");
-            List<Long> list=new ArrayList<Long>();
+            List<Long> list=new ArrayList<>();
             list.add(10000l);
             list.add(10001l);
             list.add(10002l);
