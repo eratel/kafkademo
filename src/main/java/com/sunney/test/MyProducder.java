@@ -2,39 +2,41 @@ package com.sunney.test;
 
 
 import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
-import java.util.Random;
 
 public class MyProducder {
 
-    /**
-     * 定义主题
-     */
-    public static String topic = "duanjt_test";
+    private static KafkaProducer<String, String> producer;
+    private final static String TOPIC = "adienTest2";
 
-    public static void main(String[] args) throws InterruptedException {
-        Properties p = new Properties();
-        //kafka地址，多个地址用逗号分割
-        p.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.23.76:9092");
-        p.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        p.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(p);
-
-        try {
-            while (true) {
-                String msg = "Hello," + new Random().nextInt(100);
-                ProducerRecord<String, String> record = new ProducerRecord<>(topic, msg);
-                kafkaProducer.send(record);
-                System.out.println("消息发送成功:" + msg);
-                Thread.sleep(500);
-            }
-        } finally {
-            kafkaProducer.close();
-        }
-
+    public MyProducder() {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("acks", "all");
+        props.put("retries", 0);
+        props.put("batch.size", 16384);
+        props.put("linger.ms", 1);
+        props.put("buffer.memory", 33554432);
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        //设置分区类,根据key进行数据分区
+        producer = new KafkaProducer<>(props);
     }
+
+    public void produce() {
+        for (int i = 30; i < 40; i++) {
+            String key = String.valueOf(i);
+            String data = "hello kafka message：" + key;
+            producer.send(new ProducerRecord<>(TOPIC, key, data));
+            System.out.println(data);
+        }
+        producer.close();
+    }
+
+    public static void main(String[] args) {
+        new MyProducder().produce();
+    }
+
 }
