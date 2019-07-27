@@ -19,7 +19,9 @@ public class MyConsumers {
         Properties props = new Properties();
         String TOPIC = "test10";
         String GROUP = "g1";
-
+        // 不止连接zookeeper导致无法存到数据到 zookeeper中
+        //[zk: localhost:2181(CONNECTED) 11] ls /kafka/consumers
+        //[]
         props.put("bootstrap.servers", "192.168.40.128:9092");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
